@@ -1,0 +1,54 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ListNetworkMembers",
+      "Effect": "Allow",
+      "Action": [
+          "managedblockchain:GetNetwork",
+          "managedblockchain:ListMembers"
+      ],
+      "Resource": [
+          "arn:aws:managedblockchain:*:123456789012:networks/*"
+      ]
+    },
+    {
+      "Sid": "ManageNetworkResources",
+      "Effect": "Allow",
+      "Action": [
+        "managedblockchain:CreateProposal",
+        "managedblockchain:GetProposal",
+        "managedblockchain:DeleteMember",
+        "managedblockchain:VoteOnProposal",
+        "managedblockchain:ListProposals",
+        "managedblockchain:GetNetwork",
+        "managedblockchain:ListMembers",
+        "managedblockchain:ListProposalVotes",
+        "managedblockchain:RejectInvitation",
+        "managedblockchain:GetNode",
+        "managedblockchain:GetMember",
+        "managedblockchain:DeleteNode",
+        "managedblockchain:CreateNode",
+        "managedblockchain:CreateMember",
+        "managedblockchain:ListNodes"
+      ],
+      "Resource": [
+        "arn:aws:managedblockchain:*::networks/*",
+        "arn:aws:managedblockchain:*::proposals/*",
+        "arn:aws:managedblockchain:*:123456789012:members/*",
+        "arn:aws:managedblockchain:*:123456789012:invitations/*",
+        "arn:aws:managedblockchain:*:123456789012:nodes/*"
+      ]
+    },
+    {
+      "Sid": "WorkWithNetworksForAcct",
+      "Effect": "Allow",
+      "Action": [
+        "managedblockchain:ListNetworks",
+        "managedblockchain:ListInvitations",
+        "managedblockchain:CreateNetwork"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
