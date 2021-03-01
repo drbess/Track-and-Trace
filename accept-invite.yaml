@@ -1,0 +1,78 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: AMB member invitation acceptance template
+Parameters:
+  NetworkId:
+    Description: The ID of the network that invited this new member
+    AllowedPattern: "^[0-9a-zA-Z\\-]+$"
+    Type: String
+  InvitationId:
+    Description: The ID of this new memberʼs invitation
+    AllowedPattern: "^[0-9a-zA-Z\\-]+$"
+    Type: String
+  MemberName:
+    Description: >-
+      The name of the first member in your Amazon Managed Blockchain network.
+    AllowedPattern: "^[0-9a-zA-Z]+$"
+    ConstraintDescription: FirstMemberName must be alphanumeric.
+    Type: String
+  AdminUsername:
+    Description: The user name of your first memberʼs admin user.
+    AllowedPattern: "^[0-9a-zA-Z/]+$"
+    ConstraintDescription: >-
+      AdminUsername must contain only uppercase and lowercase letters and numbers.
+    Type: String
+  AdminPassword:
+    Description: The password of your first memberʼs admin user.
+    MinLength: 8
+    MaxLength: 32
+    AllowedPattern: "^(?!.*?['\"\\/ @])(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).*{8,32}$"
+    ConstraintDescription: >-
+      AdminPassword must be at least 8 characters long and must contain at least
+      one uppercase character, one lowercase character, and one digit. It must
+      not contain ', ", \, /, @ or spaces. It must not exceed 32 characters in
+      length.
+    Type: String
+    NoEcho: true
+  PeerNode1AZ:
+    Description: The Availability Zone for your first peer node.
+    Default: us-east-1a
+    Type: String
+  PeerNode2AZ:
+    Description: The Availability Zone for your second peer node. Can be blank.
+    Default: us-east-1b
+    Type: String
+  InstanceType:
+    Description: The type of compute instance to use for your peer nodes.
+    Default: bc.t3.small
+    Type: String
+    AllowedValues:
+      - bc.t3.small
+      - bc.t2.medium
+Resources:
+  Member:
+    Type: AWS::ManagedBlockchain::Member
+    Properties:
+      NetworkId: !Ref NetworkId
+      InvitationId: !Ref InvitationId
+      MemberConfiguration:
+        Name: !Ref MemberName
+        MemberFrameworkConfiguration:
+          MemberFabricConfiguration:
+            AdminUsername: !Ref AdminUsername
+            AdminPassword: !Ref AdminPassword
+  PeerNode1:
+    Type: AWS::ManagedBlockchain::Node
+    Properties:
+      MemberId: !GetAtt Member.MemberId
+      NetworkId: !GetAtt Member.NetworkId
+      NodeConfiguration:
+        AvailabilityZone: !Ref PeerNode1AZ
+        InstanceType: !Ref InstanceType
+  PeerNode2:
+    Type: AWS::ManagedBlockchain::Node
+    Properties:
+      MemberId: !GetAtt Member.MemberId
+      NetworkId: !GetAtt Member.NetworkId
+      NodeConfiguration:
+        AvailabilityZone: !Ref PeerNode2AZ
+        InstanceType: !Ref InstanceType
